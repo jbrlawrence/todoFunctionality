@@ -1,8 +1,10 @@
+// importing the Timestamp object (allows us to create FB Timestamp objects from traditional Date objects)
 import {
     Timestamp
 } from 'firebase/firestore'
 
-
+// defining our rules for converting data to and from our FireStore database, giving us access to the custom ToDo objects whenever we load documents from the database
+// the "export" keyword allows us to access this object from other files (see index.js)
 export const todoConverter = {
     toFirestore: (todo) => {
         return {
@@ -24,6 +26,9 @@ export const todoConverter = {
     }
 };
 
+
+// adding to our traditional object a document and user id property (needed for interacting with the database)
+// also adding a timer property to count the number of seconds working on a todo item
 export class TodoItem {
     constructor(text, done, duedate, timer, id, uid) {
         this.text = text;
@@ -34,7 +39,7 @@ export class TodoItem {
         this.selected = false;
         this.uid = uid;
     }
-    display(parent, todoArray) {
+    display(parent) {
         this.itemDiv = document.createElement("DIV");
         let textDiv = document.createElement("DIV");
         this.checkDiv = document.createElement("DIV");
@@ -48,14 +53,15 @@ export class TodoItem {
         this.checkDiv.addEventListener("click", () => {
             this.toggle();
         });
+        // adding the ability to select the entire instance of the todo item and start a timer
         this.itemDiv.addEventListener("click", () => {
-            this.select(todoArray);
+            this.select();
         });
 
         textDiv.innerHTML = this.text;
         duedateDiv.innerHTML = this.duedate;
+        // making a nice string out of the timer seconds data (see index.js)
         this.timerDiv.innerHTML = getTimerString(this.timer);
-        // `${this.timer / 3600}:${(this.timer / 60) % 60}:${this.timer % 60}`;
 
         if (this.done) {
             this.checkDiv.innerHTML = "✅";
@@ -72,22 +78,26 @@ export class TodoItem {
 
         parent.appendChild(this.itemDiv);
     }
+    // the toggle method from before. the "async" keyword indicates that some part
+    // of this method will take time to complete (this part will be indicated by an
+    // "await" keyword)
     async toggle() {
         this.done = !this.done;
-        console.log(this.id);
 
-
-        console.log(this.done);
         if (this.done) {
             this.checkDiv.innerHTML = "✅";
         }
         else {
             this.checkDiv.innerHTML = "🔲";
         }
+        // run the "updateDone" function (see the index.js)
+        // you will hand it the document id and done property of this instance of the ToDo object as inputs to use in its operation
         await updateDone(this.id, this.done);
     }
-    async select(todoArray) {
+    // select method which switches the select property of this instance of the Todo object
+    select() {
         this.selected = true;
-        deselectOthers(todoArray, this.id);
+        // runs a function "deselect others" to 
+        deselectOthers(this.id);
     }
 }

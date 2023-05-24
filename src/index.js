@@ -1,7 +1,10 @@
-
+// importing our custom Todo object and converter object from the classExport JS file
 import { TodoItem, todoConverter } from "./classExport";
-import { db, auth } from "./fbSetup.js"
+// importing the db and auth objects from our setup file
+import { db, auth } from "./fbSetup"
 
+
+// importing the functions we will use from the node_module libraries
 import {
     collection, getDocs, addDoc, query, where,
     doc, updateDoc
@@ -9,13 +12,42 @@ import {
 
 import { onAuthStateChanged, signOut } from "firebase/auth"
 
+let uid;
+let myToDos = [];
 
+const colRef = collection(db, "todos").withConverter(todoConverter);
+
+// Good starting point for any flow through the page loading is the onAuthStateChanged
+// This will run as soon as the page loads and registers that the user is logged in
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        uid = user.uid;
+        let myQuery = query(colRef, where("done", "==", false), where("uid", "==", uid))
+        console.log(uid)
+        getDocs(myQuery).then(
+            (snapshot) => {
+                snapshot.forEach(
+                    (doc) => {
+                        let data = doc.data();
+                        console.log(data);
+                        data.display(document.getElementById("items"), myToDos);
+                        myToDos.push(data);
+                    }
+                );
+            }
+        )
+        //   window.location.pathname = ('/dist/4-1-ToDoMaker.html')
+        // ...
+    } else {
+        window.location.pathname = ('/dist/auth.html')
+        // User is signed out
+        // ...
+    }
+});
 
 window.signOutButton = function () {
     signOut(auth);
 }
-
-// function signOutButton(){}
 
 setInterval(() => {
     console.log(uid)
@@ -24,22 +56,20 @@ setInterval(() => {
             item.timer++;
             item.timerDiv.innerHTML = getTimerString(item.timer);
             let docRef = doc(db, "todos", item.id);
-            await updateDoc(docRef, { timer: item.timer });
+            if (item.timer % 30 === 0) {
+                await updateDoc(docRef, { timer: item.timer });
+            }
         }
     });
 }, 1000);
 
-window.deselectOthers = function (items, id) {
-    console.log(items)
-    console.log(id)
-    items.forEach((item) => {
+window.deselectOthers = function (id) {
+    myToDos.forEach((item) => {
         if (item.id != id) {
             item.selected = false;
             item.itemDiv.className = "item"
-
         }
         else {
-
             item.itemDiv.classList.add("selected");
         }
     });
@@ -47,9 +77,7 @@ window.deselectOthers = function (items, id) {
 
 
 
-let myToDos = [];
 
-const colRef = collection(db, "todos").withConverter(todoConverter);
 
 
 
@@ -60,7 +88,6 @@ window.showAdd = function () {
     document.getElementById("addItems").style.display = "block";
 }
 
-console.log("showAdd!" + showAdd)
 
 
 window.getTimerString = function (timer) {
@@ -71,16 +98,6 @@ window.getTimerString = function (timer) {
     let second = timer % 60;
     let secondString = second.toString().padStart(2, "0");
     return `${hourString}:${minuteString}:${secondString}`
-
-}
-
-window.makeUID = async function () {
-    myToDos.forEach(async (todo) => {
-        let docRef = doc(db, "todos", todo.id);
-        await updateDoc(docRef, { uid: uid });
-        // await updateDone(todo.id, this.done);
-
-    })
 
 }
 
@@ -110,37 +127,9 @@ window.addMyItem = async function () {
     document.getElementById("addItems").style.display = "none";
 }
 
-let uid;
 
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        uid = user.uid;
-        let myQuery = query(colRef, where("done", "==", false), where("uid", "==", uid))
-        console.log(uid)
-        getDocs(myQuery).then(
-            (snapshot) => {
-                snapshot.forEach(
-                    (doc) => {
-                        let data = doc.data();
-                        console.log(data);
-                        data.display(document.getElementById("items"), myToDos);
-                        myToDos.push(data);
-                    }
-                );
-            }
-        )
-        //   window.location.pathname = ('/dist/4-1-ToDoMaker.html')
-        // ...
-    } else {
-        window.location.pathname = ('/dist/auth.html')
-        // User is signed out
-        // ...
-    }
-});
-// // document.getElementById("addToDo").addEventListener("click", showAdd())
+
 window.updateDone = async function (id, done) {
     let docRef = doc(db, "todos", id);
     await updateDoc(docRef, { done: done });
