@@ -137,7 +137,6 @@ table {
 
 /* Add styling below */
 
-
 #header {
     font-size: 40px;
     text-align: center;
@@ -146,14 +145,6 @@ table {
     background-color: black;
     color: grey;
 }
-
-/* .check{
-    cursor:pointer;
-}
-.check:hover{
-    text-shadow: 1px 1px 2px black, 0 0 1em grey, 0 0 0.2em grey;
-    transform:scale(1.3);
-} */
 
 .item {
     max-width: 800px;
@@ -177,20 +168,6 @@ table {
     margin-left: auto;
 }
 
-/*input{
-    margin-top:20px;
-    font-family: 'Open Sans', sans-serif;
-    margin-left: auto;
-    margin-right: auto;
-    gap:20px;
-    padding:10px;
-    border-radius: 10px;
-    align-items: center;
-}
-/* .done{
-    opacity: 20%;
-} */
-
 .info {
     width: 400px;
 }
@@ -208,51 +185,7 @@ table {
     padding: 20px 40px;
 }
 
-
-/* #input{
-    background-color:rgb(148, 48, 48);
-    border-radius: 20px;
-    padding:20px;   
-    cursor:pointer;
-}
-#input:hover{
-    background-color:red;
-    box-shadow: white 0px 0px 20px;
-    transform: rotate(-10deg);
-} */
-
-
-
-
-
-
-
-
-
-/* 
-font-family: 'Lobster', cursive;
-font-family: 'Open Sans', sans-serif;
-font-family: 'Press Start 2P', cursive;
- */
-
-
-/* Adding boxes to everything to make clear the structure */
-/* 
-* {
-    border: solid;
-}
-
-:nth-child(even) {
-    border-color: red;
-}
-
-:nth-child(odd) {
-    border-color: blue;
-}  */
-
-
 body {
-    /* background: url("https://www.pexels.com/photo/person-walking-on-the-field-2132126/") no-repeat center center fixed; */
     background-color: grey;
 }
 
