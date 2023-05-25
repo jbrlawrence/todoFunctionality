@@ -218,7 +218,7 @@ body {
     background-color: lightgrey;
     line-height: 2em;
     display: none;
-    position: absolute;
+    position: fixed;
     top: 200px;
     left: 0px;
     right: 0px;
@@ -237,7 +237,7 @@ body {
 
 #signOut {
     font-size: 20pt;
-    position: fixed;
+    position: absolute;
     color: red;
     right: 20px;
     top: 20px;
