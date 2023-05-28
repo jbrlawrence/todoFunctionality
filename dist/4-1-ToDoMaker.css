@@ -146,6 +146,15 @@ table {
     color: grey;
 }
 
+.subhead {
+    font-size: 30px;
+    text-align: left;
+    font-family: 'Press Start 2P', cursive;
+    padding-left: 40px;
+    background-color: black;
+    color: grey;
+}
+
 .item {
     max-width: 800px;
     display: flex;
@@ -170,6 +179,7 @@ table {
 
 .info {
     width: 400px;
+    margin-left: auto;
 }
 
 .due {
