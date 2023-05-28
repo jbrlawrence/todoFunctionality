@@ -1,0 +1,5 @@
+Here are other things not in conflict.
+
+This code is in conflict on this line.
+
+Here are other things not in conflict.
