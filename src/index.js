@@ -43,7 +43,7 @@ onAuthStateChanged(auth, (user) => {
                         // thanks to the "withConverter(todoConverter)" method appended to the 
                         // collection reference
                         let data = doc.data();
-                        console.log(data);
+
                         data.display(document.getElementById("items"), myToDos);
                         // add the data (ToDo objects) to the myToDos array
                         myToDos.push(data);
@@ -121,7 +121,6 @@ window.deselectOthers = function (id) {
 // reveal the div with the addItems id 
 window.showAdd = function () {
     let addDiv = document.getElementById("addItems");
-    console.log(addDiv.style)
     document.getElementById("addItems").style.display = "block";
 }
 

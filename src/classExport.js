@@ -18,7 +18,6 @@ export const todoConverter = {
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        console.log(data);
         let timer = 0;
         if (data.timer != undefined) {
             timer = data.timer;
@@ -85,11 +84,8 @@ export class TodoItem {
         });
         this.todayDiv.addEventListener("click", () => {
             this.when = 1;
-            console.log(this.when)
             this.parent = this.parents[this.when];
-            console.log(this.parent)
             this.parent.appendChild(this.itemDiv);
-            console.log(this)
             updateWhen(this.id, this.when);
         });
         this.laterDiv.addEventListener("click", () => {
@@ -118,7 +114,6 @@ export class TodoItem {
         this.itemDiv.appendChild(this.nowDiv)
         this.itemDiv.appendChild(this.todayDiv)
         this.itemDiv.appendChild(this.laterDiv)
-        console.log("wut")
         this.parents[this.when].appendChild(this.itemDiv);
     }
     // the toggle method from before. the "async" keyword indicates that some part
