@@ -43,7 +43,7 @@ onAuthStateChanged(auth, (user) => {
                         // thanks to the "withConverter(todoConverter)" method appended to the 
                         // collection reference
                         let data = doc.data();
-                        console.log(data);
+
                         data.display(document.getElementById("items"), myToDos);
                         // add the data (ToDo objects) to the myToDos array
                         myToDos.push(data);
@@ -62,6 +62,8 @@ onAuthStateChanged(auth, (user) => {
 // (as needed by webpack), that will trigger on-click from the HTML
 // In this case all we need to do is using the signOut() function
 // (and the onAuthStateChanged() will kick the user to the authentication page)
+// function signOutButton(){}
+
 window.signOutButton = function () {
     signOut(auth);
 }
@@ -114,10 +116,11 @@ window.deselectOthers = function (id) {
 
 
 
+
+
 // reveal the div with the addItems id 
 window.showAdd = function () {
     let addDiv = document.getElementById("addItems");
-    console.log(addDiv.style)
     document.getElementById("addItems").style.display = "block";
 }
 
@@ -154,7 +157,7 @@ window.addMyItem = async function () {
     // make a new ToDo object (using the user input,
     // false for done, an empty string for the document ID and the
     // logged in user ID)
-    let newItem = new TodoItem(text, false, newDate, 0, "", uid);
+    let newItem = new TodoItem(text, false, newDate, 0, 0, "", uid);
     // add the new instance to the array
     myToDos.push(newItem)
     // make a new document in the Firestore database using our ToDo object
@@ -177,4 +180,9 @@ window.addMyItem = async function () {
 window.updateDone = async function (id, done) {
     let docRef = doc(db, "todos", id);
     await updateDoc(docRef, { done: done });
+}
+
+window.updateWhen = async function (id, when) {
+    let docRef = doc(db, "todos", id);
+    await updateDoc(docRef, { when: when });
 }
