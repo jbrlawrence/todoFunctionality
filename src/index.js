@@ -3,7 +3,6 @@ import { TodoItem, todoConverter } from "./classExport";
 // importing the db and auth objects from our setup file
 import { db, auth } from "./fbSetup"
 
-
 // importing the functions we will use from the node_module libraries
 import {
     collection, getDocs, addDoc, query, where,
