@@ -43,7 +43,7 @@ export class TodoItem {
         this.selected = false;
         this.uid = uid;
         this.when = when;
-        this.parents = [document.getElementById("now"), document.getElementById("today"), document.getElementById("later")];
+        this.parents = [document.getElementById("now"), document.getElementById("today"), document.getElementById("later"), document.getElementById("done")];
     }
     display(parent) {
 
@@ -69,7 +69,7 @@ export class TodoItem {
         this.timerDiv = document.createElement("DIV");
 
         this.checkDiv.addEventListener("click", () => {
-            this.toggle();
+            this.toggle(true);
         });
         // adding the ability to select the entire instance of the todo item and start a timer
         this.itemDiv.addEventListener("click", () => {
@@ -78,21 +78,15 @@ export class TodoItem {
 
         this.nowDiv.addEventListener("click", () => {
             this.when = 0;
-            this.parent = this.parents[this.when];
-            this.parent.appendChild(this.itemDiv);
-            updateWhen(this.id, this.when);
+            this.toggle(false);
         });
         this.todayDiv.addEventListener("click", () => {
             this.when = 1;
-            this.parent = this.parents[this.when];
-            this.parent.appendChild(this.itemDiv);
-            updateWhen(this.id, this.when);
+            this.toggle(false);
         });
         this.laterDiv.addEventListener("click", () => {
             this.when = 2;
-            this.parent = this.parents[this.when];
-            this.parent.appendChild(this.itemDiv);
-            updateWhen(this.id, this.when);
+            this.toggle(false);
         });
 
         textDiv.innerHTML = this.text;
@@ -102,6 +96,8 @@ export class TodoItem {
 
         if (this.done) {
             this.checkDiv.innerHTML = "✅";
+            this.itemDiv.style.opacity = 0.5;
+
         }
         else {
             this.checkDiv.innerHTML = "🔲";
@@ -114,23 +110,34 @@ export class TodoItem {
         this.itemDiv.appendChild(this.nowDiv)
         this.itemDiv.appendChild(this.todayDiv)
         this.itemDiv.appendChild(this.laterDiv)
-        this.parents[this.when].appendChild(this.itemDiv);
+        if (!this.done) {
+            this.parents[this.when].appendChild(this.itemDiv);
+        }
+        else {
+            this.parents[this.parents.length - 1].appendChild(this.itemDiv);
+        }
     }
     // the toggle method from before. the "async" keyword indicates that some part
     // of this method will take time to complete (this part will be indicated by an
     // "await" keyword)
-    async toggle() {
-        this.done = !this.done;
+    async toggle(checkBox) {
+        if (checkBox) {
+            this.done = !this.done;
+        }
 
         if (this.done) {
             this.checkDiv.innerHTML = "✅";
+            this.itemDiv.style.opacity = 0.5;
+            this.parents[this.parents.length - 1].appendChild(this.itemDiv);
         }
         else {
             this.checkDiv.innerHTML = "🔲";
+            this.itemDiv.style.opacity = 1;
+            this.parents[this.when].appendChild(this.itemDiv);
         }
         // run the "updateDone" function (see the index.js)
         // you will hand it the document id and done property of this instance of the ToDo object as inputs to use in its operation
-        await updateDone(this.id, this.done);
+        await updateDone(this.id, this.done, this.when);
     }
     // select method which switches the select property of this instance of the Todo object
     select() {

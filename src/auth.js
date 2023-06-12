@@ -39,7 +39,7 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         // user is signed in, redirect them to the main page
         // this triggers after signing in above
-        window.location.pathname = ('/dist/4-1-ToDoMaker.html');
+        window.location.pathname = ('./4-1-ToDoMaker.html');
     } else {
         // User is signed out, do nothing
     }

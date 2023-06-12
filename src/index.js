@@ -53,7 +53,7 @@ onAuthStateChanged(auth, (user) => {
 
     } else {
         // if the user is signed out kick them to the authentication page
-        window.location.pathname = ('/dist/auth.html')
+        window.location.pathname = ('./auth.html')
     }
 });
 
@@ -72,7 +72,6 @@ window.signOutButton = function () {
 // function. In this case updating the selected toDo item by incrementing its
 // timer every 1 second.
 setInterval(() => {
-    console.log(uid)
     myToDos.forEach(async (item) => {
         // loop through the ToDos array and check each one if they are selected
         if (item.selected) {
@@ -116,12 +115,25 @@ window.deselectOthers = function (id) {
 
 
 
-
+let showAdd = false;
 // reveal the div with the addItems id 
 window.showAdd = function () {
     let addDiv = document.getElementById("addItems");
     document.getElementById("addItems").style.display = "block";
+    const input = document.getElementById("textInput");
+    input.focus();
+    input.select();
+    showAdd = true;
+
 }
+
+document.onkeydown = function () {
+    if (window.event.keyCode == '13' && showAdd) {
+        addMyItem();
+    }
+}
+
+
 
 // a simple helper function that translates seconds into a nice text format
 window.getTimerString = function (timer) {
@@ -141,18 +153,18 @@ window.addMyItem = async function () {
     console.log("adding items");
     // get the user input from the html form
     let text = document.getElementById("textInput").value;
-    let date = document.getElementById("dateInput").value;
-    let time = document.getElementById("timeInput").value;
+    //  let date = document.getElementById("dateInput").value;
+    //    let time = document.getElementById("timeInput").value;
 
 
-    console.log(`user input: ${text} ${date} ${time}`);
+    //    console.log(`user input: ${text} ${date} ${time}`);
     // make a Date object from the input date and time
-    let newDate = new Date(`${date}T${time}`)
+    //let newDate = new Date(`${date}T${time}`)
     // check if the Date object is not correctly formed (is Not a Number)
-    if (isNaN(newDate)) {
-        // just use the current date/time if it's not correctly formed
-        newDate = new Date();
-    }
+    // if (isNaN(newDate)) {
+    // just use the current date/time if it's not correctly formed
+    let newDate = new Date();
+    //}
     // make a new ToDo object (using the user input,
     // false for done, an empty string for the document ID and the
     // logged in user ID)
@@ -168,6 +180,7 @@ window.addMyItem = async function () {
     newItem.display(document.getElementById("items"), myToDos);
     // hide the input div
     document.getElementById("addItems").style.display = "none";
+    showAdd = false;
 }
 
 
@@ -176,12 +189,7 @@ window.addMyItem = async function () {
 // update the fireStore database using the updateDoc function
 // and the document id and done property received from the
 // toggle() method
-window.updateDone = async function (id, done) {
+window.updateDone = async function (id, done, when) {
     let docRef = doc(db, "todos", id);
-    await updateDoc(docRef, { done: done });
-}
-
-window.updateWhen = async function (id, when) {
-    let docRef = doc(db, "todos", id);
-    await updateDoc(docRef, { when: when });
+    await updateDoc(docRef, { done: done, when: when });
 }
